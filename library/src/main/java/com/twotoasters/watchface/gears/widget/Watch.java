@@ -70,6 +70,8 @@ public class Watch {
 
     private AlarmManager alarmManager;
 
+    private long mTickInterval = 1000;
+
     private final ContentObserver mFormatChangeObserver = new ContentObserver(new Handler()) {
         @Override
         public void onChange(boolean selfChange) {
@@ -103,7 +105,7 @@ public class Watch {
             onTimeChanged();
 
             long now = SystemClock.uptimeMillis();
-            long next = now + (1000 - now % 1000);
+            long next = now + (mTickInterval - now % mTickInterval);
 
             if (hasWatchface())
                 getWatchface().getHandler().postAtTime(mTicker, next);
@@ -447,5 +449,13 @@ public class Watch {
 
     private IWatchface getWatchface() {
         return hasWatchface() ? watchfaceRef.get() : null;
+    }
+
+    public long getTickInterval() {
+        return mTickInterval;
+    }
+
+    public void setTickInterval(long tickInterval) {
+        this.mTickInterval = tickInterval;
     }
 }
